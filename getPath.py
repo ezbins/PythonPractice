@@ -22,9 +22,9 @@ def checkDirectory(path):
                 for item in subdirs:
                     if item in git_bare_repo:
                          print(subpath, end='\n')
-                         pathlist = dict( subpath= "1")
+                         pathlist = dict({subpath:1})
                          return pathlist
-
+                        
                         # print(item, end='\n')
                         # print(subpath, end='\n')
                 # print(subdirs,end='\n')
