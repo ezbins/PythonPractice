@@ -45,6 +45,7 @@ def excuteCommand(path,folder):
         command_line="tar zcvf "+folder+".tar.gz "+folder+"\\/"
         args=shlex.split(command_line)
         subprocess.Popen(args)
+        
     except OSError as error:
         print(error)
     
