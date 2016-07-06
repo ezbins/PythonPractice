@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from os import listdir, walk
 from os.path import isdir, join, basename, exists,basename
+import shlex, subprocess
 
 git_bare_repo = ['branches', 'hooks']
 
@@ -29,13 +30,23 @@ def checkDirectory(path):
 
 ##將檔案路徑中,取出最後一層目錄的路徑切開
 def splitdirectoryPath(path):
-    for single_path in path:
-        name = basename(single_path)
+    for singleItem in path:
+        folder = basename(singleItem)
+        absPath = str.split(singleItem,'folder')
+        ##目錄及路徑分開後,執行備份
+        excuteCommand(absPath,folder)
         print (name)
 
 
 ##執行外部指令
-def excuteCommand():
+def excuteCommand(path,folder):
+    try:
+        os.chdir(path)
+        command_line="tar zcvf "+folder+".tar.gz "+folder+"\\/"
+        args=shlex.split(command_line)
+        subprocess.Popen(args)
+    except OSError as error:
+        print(error)
     
 getPath = input("Enter path you wanna looking,with absu path: ")
 mylist=checkDirectory(getPath)
