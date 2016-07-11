@@ -20,16 +20,14 @@ def checkDirectory(path):
                     if signal_subdir in git_bare_repo:  
                       print(fullpath)                       
                       pathlist[fullpath] = pathlist.get(fullpath,0)+1
-
-        print(pathlist.keys())
         return pathlist                       
                        
     except OSError as e:
-        chdir('/home/shao')
+        chdir('/var/log')
         logfile=open('badNews.log','a')
         logfile.write(str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))+"\t")
         logfile.write(e.strerror+"\n")
-        logfile.close()
+        logfile.close() 
 
 ##將檔案路徑中,取出最後一層目錄的路徑切開
 def splitdirectoryPath(path):
@@ -48,11 +46,11 @@ def excuteCommand(path,foldername):
         chdir(path)       
         returnCode=subprocess.call(["tar","-zcvf",foldername+".tar.gz",foldername])
         achiveFile=foldername+'.tar.gz'
-        shutil.copy(achiveFile,'/home/shao')
+        shutil.copy(achiveFile,'/repobackup')
         remove(achiveFile)
         ##記錄執令指行的結果,
         if returnCode==0:
-            chdir('/home/shao')
+            chdir('/var/log')
             logfile=open('tarfile.log','a')
             logfile.write(str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))+"\t")
             logfile.write(foldername+" was archived"+"\n")
@@ -60,15 +58,13 @@ def excuteCommand(path,foldername):
                   
             
     except OSError as e:
-        chdir('/home/shao')
+        chdir('/var/log')
         logfile=open('badNews.log','a')
         logfile.write(str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))+"\t")
         logfile.write(e.strerror+"\n")   
         logfile.close()
 
-getPath = input("Enter path you wanna looking,with absu path: ")
-
-mylist=checkDirectory(getPath)
+mylist=checkDirectory('/home/scm/repositories/git')
 splitdirectoryPath(mylist.keys())
 
 
