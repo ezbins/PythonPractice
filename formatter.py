@@ -20,3 +20,5 @@ for item in old_list:
     new_list.append(formatter(item))
 
 print(new_list)
+##增加註解
+print(abs)
