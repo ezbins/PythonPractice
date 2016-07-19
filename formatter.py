@@ -22,3 +22,4 @@ for item in old_list:
 print(new_list)
 ##增加註解
 print(abs)
+print("124")
