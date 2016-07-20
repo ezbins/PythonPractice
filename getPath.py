@@ -70,5 +70,3 @@ getPath = input("Enter path you wanna looking,with absu path: ")
 
 mylist=checkDirectory(getPath)
 splitdirectoryPath(mylist.keys())
-
-

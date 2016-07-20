@@ -1,6 +1,6 @@
 // 將您的設定放入此檔案中以覆寫預設值和使用者設定。
 {
    // 控制字型大小。
-    "editor.fontSize": 18   
-
+    "editor.fontSize": 17,   
+    "editor.fontFamily ": "'Noto Sans CJK TC', 'Noto Sans Mono CJK TC'"
 }
