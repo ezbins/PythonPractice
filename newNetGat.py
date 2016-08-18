@@ -14,22 +14,45 @@ upload_destination  = ""
 port                = 0
 
 def usage():
-        print "Netcat Replacement"
-        print
-        print "Usage: bhpnet.py -t target_host -p port"
-        print "-l --listen                - listen on [host]:[port] for incoming connections"
-        print "-e --execute=file_to_run   - execute the given file upon receiving a connection"
-        print "-c --command               - initialize a command shell"
-        print "-u --upload=destination    - upon receiving connection upload a file and write to [destination]"
-        print
-        print
-        print "Examples: "
-        print "bhpnet.py -t 192.168.0.1 -p 5555 -l -c"
-        print "bhpnet.py -t 192.168.0.1 -p 5555 -l -u=c:\\target.exe"
-        print "bhpnet.py -t 192.168.0.1 -p 5555 -l -e=\"cat /etc/passwd\""
-        print "echo 'ABCDEFGHI' | ./bhpnet.py -t 192.168.11.12 -p 135"
+        print ("Netcat Replacement")
+        print ("Usage: bhpnet.py -t target_host -p port")
+        print ("-l --listen                - listen on [host]:[port] for incoming connections")
+        print ("-e --execute=file_to_run   - execute the given file upon receiving a connection")
+        print ("-c --command               - initialize a command shell")
+        print ("-u --upload=destination    - upon receiving connection upload a file and write to [destination]")       
+        print ("Examples: ")
+        print ("bhpnet.py -t 192.168.0.1 -p 5555 -l -c")
+        print ("bhpnet.py -t 192.168.0.1 -p 5555 -l -u=c:\\target.exe")
+        print ("bhpnet.py -t 192.168.0.1 -p 5555 -l -e=\"cat /etc/passwd\"")
+        print ("echo 'ABCDEFGHI' | ./bhpnet.py -t 192.168.11.12 -p 135")
         sys.exit(0)
+def server_loop():
+    global target
 
+    #若沒定義目標,就監聽所有介面
+    if not len(target):
+        target = "0.0.0.0"
+
+    server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    server.bind((target,port))
+    server.listen(5)
+
+    while True:
+        client_socket,addr = server.accept()
+        client_thrad = threading.Thread(target=client_hanlder,args=(client_socket,))
+        client_thrad.start()
+
+def run_command(command):
+    #換掉換行符號
+    command = command.rstrip()
+
+    #執行指令並取回輸出
+    try:
+        output = subprocess.check_output(command,stderr=subprocess.STDOUT,shell=True)
+    except:
+        output = "指令執行失敗.\r\n"
+
+    return output
 def main():
     global listen
     global port
@@ -44,7 +67,7 @@ def main():
     #read the commandline options    
     try:
         opts,args = getopt.getopt(sys.argv[1:],"hle:t:p:cu:",["help","listen","execute","target","port","command","upload"])
-        except getopt.GetoptError as err:
+    except getopt.GetoptError as err:
             print(str(err))
             usage()
 
@@ -73,4 +96,37 @@ def main():
     if listen:
         server_loop()
 
-    main()
+def client_sender(buffer):
+    client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+
+    try:
+        client.connect((target,port))
+        if len(buffer):
+            client.send(buffer)
+        
+        while True:
+            recv_len = 1
+            response =""
+
+            while recv_len:
+                data     = client.recv(4096)
+                recv_len = len(data)
+                response+=data
+
+                if recv_len < 4096:
+                    break
+                
+                print (reponse)
+
+                buffer = input();
+                buffer +="\n"
+
+                #傳出去
+                client.send(buffer)
+    except:
+        print("[*] Exception! Exiting!!")
+        client.close()
+
+
+
+main()
