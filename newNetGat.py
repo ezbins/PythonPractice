@@ -64,7 +64,7 @@ def client_hanlder(client_socket):
         #run the command
         output = run_command(execute)
 
-        client_socket.send(output)
+        client_socket.send(output.encode(encoding='utf-8'))
 
      #now we go to another new loop if a command shell was requtsted
     if command:
@@ -73,20 +73,19 @@ def client_hanlder(client_socket):
             
             #show a simple prompt
             prompt="<BHP:#>"
-            client_socket.sendto(prompt.encode(encoding='utf_8'),(target,port))
+            client_socket.send(b'<BHP:#>')
 
             #we will receive until we see a linefeed (enter key)
             cmd_buffer = ""
             while "\n" not in cmd_buffer:
-                data=client_socket.recv(1024)
-                cmd_buffer +=data.decode()
-
-                
+                cmd_buffer=repr(client_socket.recv(1024))             
+                print(type(cmd_buffer))
+               
                 # we have a valid command so execute it and send back the results
-                response = run_command(cmd_buffer)
+            response = run_command(cmd_buffer)
 
                 # send back the response
-                client_socket.send(response.encode(encoding='utf_8'),(target,port))
+            client_socket.send(response.encode(encoding='utf_8'))
 
 # this is for incoming connections
 def server_loop():
