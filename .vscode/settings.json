@@ -2,5 +2,6 @@
 {
    // 控制字型大小。
     "editor.fontSize": 17,   
-    "editor.fontFamily ": "'Noto Sans CJK TC', 'Noto Sans Mono CJK TC'"
+    "editor.fontFamily ": "'Noto Sans CJK TC', 'Noto Sans Mono CJK TC'",
+    "python.linting.pylintEnabled": false
 }
