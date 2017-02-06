@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# coding=utf-8
 
 import re
 
@@ -10,6 +10,22 @@ while True:
     if passwd == '' or (len(passwd)) < 8:
         print('password is not null or password length small then 8')
         break
-    pw_re = re.compile(r'''(
-
-    )''', re.VERBOSE)
+    # if re.search("[\d{8}]", passwd):
+    #     print('weak password')
+    #     break
+    if re.search("[\w{8}]", passwd):
+        print('weak password')
+        break
+    if re.search("[\w{1,}\d{1,}!@#$%^&*]", passwd):
+        print('complex passwd')
+        break
+    else:
+        print('weak password')
+        break
+    # pw_re = re.compile(r'''(
+    #     [a-zA-z\d{1:}]+
+    # )''', re.VERBOSE)
+    # if pw_re.search(passwd):
+    #     print("Complex password")
+    # else:
+    #     print("weak password")
