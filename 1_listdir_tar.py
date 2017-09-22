@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from os import listdir, walk, chdir, remove, mkdir
-from os.path import isdir, join, basename, exists
+from os.path import isdir, join, basename
 import shutil
 import subprocess
 import time

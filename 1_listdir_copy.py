@@ -2,9 +2,8 @@
 # coding: utf-8
 
 from os import listdir, walk, chdir, remove, mkdir
-from os.path import isdir, join, basename, exists
-import shutil
-import subprocess
+from os.path import isdir, join, basename, exists, isfile
+from shutil import copy
 import time
 import datetime
 
@@ -15,8 +14,9 @@ def copy_tar_file(path, backup_path):
         chdir(path)
         total_folders = listdir(path)
         for item_name in total_folders:
-            shutil.copy(item_name + ".tar.gz")
-            remove(item_name + ".tar.gz")
+            if isfile(join(path, item_name)):
+                copy(item_name, backup_path)
+                remove(item_name)
 
     except OSError as e:
         chdir("/var/log")
@@ -36,7 +36,7 @@ def working_path(path):
                 if basename(abs_path) in ['si', 'sd']:
                     if not exists("/repobackup/" + basename(abs_path)):
                         backup_path = mkdir(
-                            "/trepobackupmp/" + basename(abs_path))
+                            "/repobackup/" + basename(abs_path))
                     else:
                         backup_path = "/repobackup/" + basename(abs_path)
 
