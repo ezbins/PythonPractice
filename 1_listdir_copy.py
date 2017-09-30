@@ -3,9 +3,13 @@
 
 from os import listdir, walk, chdir, remove, mkdir
 from os.path import isdir, join, basename, exists, isfile
-from shutil import copy
+import subprocess
 import time
 import datetime
+
+
+wanted_to_move_file_path = "/home/scm/repositories/svn"
+move_file_dest = "/repobackup/"
 
 
 # 移動tar檔到備份目錄
@@ -15,8 +19,7 @@ def copy_tar_file(path, backup_path):
         total_folders = listdir(path)
         for item_name in total_folders:
             if isfile(join(path, item_name)):
-                copy(item_name, backup_path)
-                remove(item_name)
+                subprocess.call(["mv", item_name, backup_path])
 
     except OSError as e:
         chdir("/var/log")
@@ -34,11 +37,11 @@ def working_path(path):
             abs_path = join(path, single_item)
             if isdir(abs_path):
                 if basename(abs_path) in ['si', 'sd']:
-                    if not exists("/repobackup/" + basename(abs_path)):
+                    if not exists(move_file_dest + basename(abs_path)):
                         backup_path = mkdir(
-                            "/repobackup/" + basename(abs_path))
+                            move_file_dest + basename(abs_path))
                     else:
-                        backup_path = "/repobackup/" + basename(abs_path)
+                        backup_path = move_file_dest + basename(abs_path)
 
                     copy_tar_file(abs_path, backup_path)
                 else:
@@ -52,5 +55,4 @@ def working_path(path):
         logfile.write(e.strerror + "\n")
 
 
-path = "/home/scm/repositories/svn"
-working_path(path)
+working_path(wanted_to_move_file_path)

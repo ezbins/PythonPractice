@@ -8,9 +8,11 @@ import subprocess
 import time
 import datetime
 
+wanted_to_tar_path = "/home/scm/repositories/svn"
+
 
 # SVN儲存庫壓縮
-def backup_svn_repo(path, backup_path):
+def tar_svn_repo(path):
     try:
         chdir(path)
         total_folders = listdir(path)
@@ -33,7 +35,7 @@ def working_path(path):
             abs_path = join(path, single_item)
             if isdir(abs_path):
                 if basename(abs_path) in ['si', 'sd']:
-                    backup_svn_repo(abs_path, backup_path)
+                    tar_svn_repo(abs_path)
                 else:
                     working_path(abs_path)
 
@@ -45,5 +47,4 @@ def working_path(path):
         logfile.write(e.strerror + "\n")
 
 
-path = "/home/scm/repositories/svn"
-working_path(path)
+working_path(wanted_to_tar_path)
