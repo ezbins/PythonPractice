@@ -33,7 +33,7 @@ lan_mac = input()
 while invalid_length:
     if len(lan_mac) != 17:
         print("Sorry! lan mac lenght may wrong, Please key in again: ", end='')
-        lan_mac = input()        
+        lan_mac = input()
         continue
 
     elif re.search(r'[gG]', lan_mac):
